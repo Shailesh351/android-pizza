@@ -14,10 +14,13 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:foregroundGravity="center"
+        app:color="#eab034"
+        app:cut_color="#c4840c"
+        app:cut_width="6dp"
+        app:edge_color="#c4840c"
+        app:edge_width="12dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:no_of_wedges="6"
-        app:stroke_color="#f80"
-        app:stroke_width="8dp" />
+        app:no_of_wedges="8" />
 
 </RelativeLayout>

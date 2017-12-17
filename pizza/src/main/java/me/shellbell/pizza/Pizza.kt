@@ -16,6 +16,11 @@ class Pizza : View {
 
     private lateinit var paint: Paint
     private var noOfWedges = 8
+    private var color = Color.YELLOW
+    private var edgeWidth = 36F
+    private var edgeColor = Color.GRAY
+    private var cutWidth = 6F
+    private var cutColor = Color.BLACK
 
     constructor(context: Context?) : super(context) {
         init(context, null)
@@ -30,21 +35,19 @@ class Pizza : View {
     }
 
     private fun init(context: Context?, attrs: AttributeSet?) {
-        var strokeWidth = 4F
-        var strokeColor = Color.BLACK
 
         if (attrs != null) {
             val attrsArray = context!!.obtainStyledAttributes(attrs, R.styleable.Pizza)
 
             noOfWedges = attrsArray.getInt(R.styleable.Pizza_no_of_wedges, 8)
-            strokeWidth = attrsArray.getDimension(R.styleable.Pizza_stroke_width, 4F)
-            strokeColor = attrsArray.getColor(R.styleable.Pizza_stroke_color, Color.BLACK)
+            color = attrsArray.getColor(R.styleable.Pizza_color, Color.YELLOW)
+            edgeWidth = attrsArray.getDimension(R.styleable.Pizza_edge_width, 36F)
+            edgeColor = attrsArray.getColor(R.styleable.Pizza_edge_color, Color.MAGENTA)
+            cutWidth = attrsArray.getDimension(R.styleable.Pizza_cut_width, 6F)
+            cutColor = attrsArray.getColor(R.styleable.Pizza_cut_color, Color.BLACK)
         }
-
         paint = Paint(Paint.ANTI_ALIAS_FLAG)
         paint.style = Paint.Style.STROKE
-        paint.strokeWidth = strokeWidth
-        paint.color = strokeColor
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -56,15 +59,40 @@ class Pizza : View {
         val cx = (width / 2 + paddingLeft).toFloat()
         val cy = (height / 2 + paddingTop).toFloat()
 
-        val diameter = min(width, height).toFloat() - paint.strokeWidth
-        val radius = diameter / 2
-
-        canvas?.drawCircle(cx, cy, radius, paint)
-        drawPizzaCuts(canvas, cx, cy, radius)
+        fillPizza(canvas, cx, cy, width, height)
+        drawEdge(canvas, cx, cy, width, height)
+        drawPizzaCuts(canvas, cx, cy, width, height)
     }
 
-    private fun drawPizzaCuts(canvas: Canvas?, cx: Float, cy: Float, radius: Float) {
+    private fun fillPizza(canvas: Canvas?, cx: Float, cy: Float, width: Int, height: Int) {
+        val diameter = min(width, height).toFloat()
+        val radius = diameter / 2
+
+        paint.color = color
+        paint.style = Paint.Style.FILL
+
+        canvas?.drawCircle(cx, cy, radius, paint)
+    }
+
+    private fun drawEdge(canvas: Canvas?, cx: Float, cy: Float, width: Int, height: Int) {
+        val diameter = min(width, height).toFloat() - edgeWidth
+        val radius = diameter / 2
+
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = edgeWidth
+        paint.color = edgeColor
+
+        canvas?.drawCircle(cx, cy, radius, paint)
+    }
+
+    private fun drawPizzaCuts(canvas: Canvas?, cx: Float, cy: Float, width: Int, height: Int) {
+        val diameter = min(width, height).toFloat() - 2 * edgeWidth
+        val radius = diameter / 2
         val degree = 360F / noOfWedges
+
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = cutWidth
+        paint.color = cutColor
 
         canvas?.save()
 
