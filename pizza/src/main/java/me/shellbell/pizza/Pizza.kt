@@ -96,7 +96,12 @@ class Pizza : View {
 
         canvas?.save()
 
-        for (i in 1..noOfWedges) {
+        for (i in 2..noOfWedges) {
+            canvas?.rotate(degree, cx, cy)
+            canvas?.drawLine(cx, cy, cx, cy - radius, paint)
+        }
+
+        if (noOfWedges != 1) {
             canvas?.rotate(degree, cx, cy)
             canvas?.drawLine(cx, cy, cx, cy - radius, paint)
         }
