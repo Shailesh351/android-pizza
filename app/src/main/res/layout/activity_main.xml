@@ -15,14 +15,27 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="74dp"
         android:foregroundGravity="center"
-        app:color="#eab034"
-        app:cut_color="#c4840c"
+        app:color="@color/pizza_color"
+        app:cut_color="@color/pizza_cut"
         app:cut_width="6dp"
-        app:edge_color="#a66d02"
+        app:edge_color="@color/pizza_edge"
         app:edge_width="12dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:no_of_wedges="8" />
+
+    <ImageButton
+        android:id="@+id/pizza_color_picker"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_above="@+id/linearLayout"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="11dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/pizza_color"
+        android:contentDescription="@string/pizza_color_picker" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -65,15 +78,33 @@
             android:layout_height="1dp"
             android:background="@color/divider_color" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="8dp"
-            android:paddingTop="8dp"
-            android:text="@string/cut_width"
-            android:textSize="18sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:text="@string/cut_width"
+                android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/cut_color_picker"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/pizza_cut"
+                android:contentDescription="@string/cut_color_picker" />
+
+        </RelativeLayout>
 
         <SeekBar
             android:id="@+id/cut_width_seek_bar"
@@ -90,15 +121,33 @@
             android:layout_height="1dp"
             android:background="@color/divider_color" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="8dp"
-            android:paddingTop="8dp"
-            android:text="@string/edge_width"
-            android:textSize="18sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:text="@string/edge_width"
+                android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/edge_color_picker"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/pizza_edge"
+                android:contentDescription="@string/edge_color_picker" />
+
+        </RelativeLayout>
 
         <SeekBar
             android:id="@+id/edge_width_seek_bar"

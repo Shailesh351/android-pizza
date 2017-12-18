@@ -1,13 +1,18 @@
 package me.shellbell.makepizza
 
+import android.annotation.TargetApi
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.TextView
+import com.android.colorpicker.ColorPickerDialog
 import me.shellbell.pizza.Pizza
 import kotlin.math.min
 
@@ -15,9 +20,14 @@ import kotlin.math.min
 class MainActivity : AppCompatActivity() {
 
     private lateinit var pizza: Pizza
+
     private lateinit var edgeWidthSeekBar: SeekBar
     private lateinit var cutWidthSeekBar: SeekBar
     private lateinit var noOfWedgesEditText: EditText
+
+    private lateinit var pizzaColorButton: ImageButton
+    private lateinit var edgeColorButton: ImageButton
+    private lateinit var cutColorButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +36,11 @@ class MainActivity : AppCompatActivity() {
         edgeWidthSeekBar = findViewById(R.id.edge_width_seek_bar)
         cutWidthSeekBar = findViewById(R.id.cut_width_seek_bar)
         noOfWedgesEditText = findViewById(R.id.no_of_wedges_edit_text)
+
+        pizzaColorButton = findViewById(R.id.pizza_color_picker)
+        edgeColorButton = findViewById(R.id.edge_color_picker)
+        cutColorButton = findViewById(R.id.cut_color_picker)
+
         pizza = findViewById(R.id.pizza)
 
         pizza.post { setup() }
@@ -35,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         setupNoOfWedgesEditText()
         setupEdgeWidthSeekBar()
         setupCutWidthSeekBar()
+        setupColorPickers()
     }
 
     private fun setupNoOfWedgesEditText() {
@@ -95,5 +111,40 @@ class MainActivity : AppCompatActivity() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
+    }
+
+    private fun setupColorPickers() {
+        pizzaColorButton.setOnClickListener { showColorPicker(pizza.color, "pizza") }
+        edgeColorButton.setOnClickListener { showColorPicker(pizza.edgeColor, "edge") }
+        cutColorButton.setOnClickListener { showColorPicker(pizza.cutColor, "cut") }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private fun showColorPicker(selectedColor: Int, label: String) {
+        val colorPickerDialog = ColorPickerDialog()
+        val colors = this@MainActivity.resources.getIntArray(R.array.colors)
+
+        colorPickerDialog.initialize(R.string.color_picker_default_title,
+                colors, selectedColor, 5, 2)
+
+        colorPickerDialog.setOnColorSelectedListener {
+            when (label) {
+                "pizza" -> {
+                    pizza.color = it
+                    pizzaColorButton.background = ColorDrawable(it)
+                }
+                "edge" -> {
+                    pizza.edgeColor = it
+                    edgeColorButton.background = ColorDrawable(it)
+                }
+                "cut" -> {
+                    pizza.cutColor = it
+                    cutColorButton.background = ColorDrawable(it)
+                }
+            }
+            pizza.invalidate()
+        }
+
+        colorPickerDialog.show(this.fragmentManager, "color_picker")
     }
 }

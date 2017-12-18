@@ -3,4 +3,7 @@
     <string name="edge_width">Edge width</string>
     <string name="cut_width">Cut width</string>
     <string name="no_of_wedges">No of wedges</string>
+    <string name="edge_color_picker">Edge Color Picker</string>
+    <string name="cut_color_picker">Cut Color Picker</string>
+    <string name="pizza_color_picker">Pizza color picker</string>
 </resources>
