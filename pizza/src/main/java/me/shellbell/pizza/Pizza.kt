@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import kotlin.math.max
 import kotlin.math.min
 
 /**
@@ -15,12 +16,15 @@ import kotlin.math.min
 class Pizza : View {
 
     private lateinit var paint: Paint
-    private var noOfWedges = 8
-    private var color = Color.YELLOW
-    private var edgeWidth = 36F
-    private var edgeColor = Color.GRAY
-    private var cutWidth = 6F
-    private var cutColor = Color.BLACK
+
+    var radius = 0F
+
+    var noOfWedges = 8
+    var color = Color.YELLOW
+    var edgeWidth = 36F
+    var edgeColor = Color.GRAY
+    var cutWidth = 6F
+    var cutColor = Color.BLACK
 
     constructor(context: Context?) : super(context) {
         init(context, null)
@@ -59,24 +63,22 @@ class Pizza : View {
         val cx = (width / 2 + paddingLeft).toFloat()
         val cy = (height / 2 + paddingTop).toFloat()
 
-        fillPizza(canvas, cx, cy, width, height)
-        drawEdge(canvas, cx, cy, width, height)
-        drawPizzaCuts(canvas, cx, cy, width, height)
+        radius = (min(width, height) / 2).toFloat()
+
+        fillPizza(canvas, cx, cy)
+        drawEdge(canvas, cx, cy)
+        drawPizzaCuts(canvas, cx, cy)
     }
 
-    private fun fillPizza(canvas: Canvas?, cx: Float, cy: Float, width: Int, height: Int) {
-        val diameter = min(width, height).toFloat()
-        val radius = diameter / 2
-
+    private fun fillPizza(canvas: Canvas?, cx: Float, cy: Float) {
         paint.color = color
         paint.style = Paint.Style.FILL
 
         canvas?.drawCircle(cx, cy, radius, paint)
     }
 
-    private fun drawEdge(canvas: Canvas?, cx: Float, cy: Float, width: Int, height: Int) {
-        val diameter = min(width, height).toFloat() - edgeWidth
-        val radius = diameter / 2
+    private fun drawEdge(canvas: Canvas?, cx: Float, cy: Float) {
+        val radius = radius - edgeWidth / 2
 
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = edgeWidth
@@ -85,9 +87,8 @@ class Pizza : View {
         canvas?.drawCircle(cx, cy, radius, paint)
     }
 
-    private fun drawPizzaCuts(canvas: Canvas?, cx: Float, cy: Float, width: Int, height: Int) {
-        val diameter = min(width, height).toFloat() - 2 * edgeWidth
-        val radius = diameter / 2
+    private fun drawPizzaCuts(canvas: Canvas?, cx: Float, cy: Float) {
+        val radius = radius - edgeWidth
         val degree = 360F / noOfWedges
 
         paint.style = Paint.Style.STROKE
