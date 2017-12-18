@@ -1,1 +1,1 @@
-include ':app', ':pizza'
+include ':app', ':pizza', ':colorpicker'
