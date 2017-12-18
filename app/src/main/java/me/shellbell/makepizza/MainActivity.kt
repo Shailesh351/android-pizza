@@ -8,10 +8,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.SeekBar
-import android.widget.TextView
+import android.widget.*
 import com.android.colorpicker.ColorPickerDialog
 import me.shellbell.pizza.Pizza
 import kotlin.math.min
@@ -63,7 +60,14 @@ class MainActivity : AppCompatActivity() {
                         InputMethodManager.HIDE_NOT_ALWAYS)
 
                 if (noOfWedgesEditText.text.toString().isNotEmpty()) {
-                    pizza.noOfWedges = noOfWedgesEditText.text.toString().toInt()
+                    try {
+                        noOfWedgesEditText.text.toString().toInt()
+                        pizza.noOfWedges = noOfWedgesEditText.text.toString().toInt()
+                    } catch (e: NumberFormatException) {
+                        Toast.makeText(this, "Not an integer", Toast.LENGTH_SHORT).show()
+                        noOfWedgesEditText.setText("0")
+                        pizza.noOfWedges = 0
+                    }
                 } else {
                     pizza.noOfWedges = 0
                 }
