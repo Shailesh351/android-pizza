@@ -42,6 +42,31 @@
             android:paddingLeft="16dp"
             android:paddingRight="8dp"
             android:paddingTop="8dp"
+            android:text="@string/cut_width"
+            android:textSize="18sp" />
+
+        <SeekBar
+            android:id="@+id/cut_width_seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider_color" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
             android:text="@string/edge_width"
             android:textSize="18sp" />
 
@@ -49,6 +74,7 @@
             android:id="@+id/edge_width_seek_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:padding="8dp"
             android:paddingBottom="8dp"
             android:paddingLeft="16dp"
