@@ -1,16 +1,29 @@
 package me.shellbell.makepizza
 
+import android.Manifest
 import android.annotation.TargetApi
 import android.content.Context
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.android.colorpicker.ColorPickerDialog
 import me.shellbell.pizza.Pizza
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.math.min
 
 
@@ -39,6 +52,8 @@ class MainActivity : AppCompatActivity() {
         cutColorButton = findViewById(R.id.cut_color_picker)
 
         pizza = findViewById(R.id.pizza)
+        pizza.isDrawingCacheEnabled = true
+        pizza.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
 
         pizza.post { setup() }
     }
@@ -48,6 +63,13 @@ class MainActivity : AppCompatActivity() {
         setupEdgeWidthSeekBar()
         setupCutWidthSeekBar()
         setupColorPickers()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val saveMenuItem = menu?.add("Save pizza")
+        saveMenuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_save_white_24dp)
+        saveMenuItem?.setOnMenuItemClickListener { savePizza() }?.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        return super.onCreateOptionsMenu(menu)
     }
 
     private fun setupNoOfWedgesEditText() {
@@ -150,5 +172,47 @@ class MainActivity : AppCompatActivity() {
         }
 
         colorPickerDialog.show(this.fragmentManager, "color_picker")
+    }
+
+    private fun savePizza(): Boolean {
+        pizza.buildDrawingCache()
+        val bitmap = pizza.drawingCache
+
+        if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
+
+            if (!isStoragePermissionGranted()) {
+                Toast.makeText(this@MainActivity, "Give storage permission to store Pizza", Toast.LENGTH_SHORT).show()
+                ActivityCompat.requestPermissions(this,
+                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                        0)
+            }
+
+            val dir = File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_PICTURES), "Pizza")
+
+            if (!dir.mkdirs()) {
+                //Directory not created
+            }
+
+            val sdf = SimpleDateFormat("yyyy-MM-dd-HH:mm:ss", Locale.getDefault())
+            val file = File(dir, "PIZZA-" + sdf.format(Calendar.getInstance().time) + ".png")
+
+            try {
+                val outputStream = FileOutputStream(file)
+                bitmap.compress(Bitmap.CompressFormat.PNG, 10, outputStream)
+                outputStream.close()
+                Toast.makeText(this@MainActivity, "Pizza saved at " + file.absolutePath, Toast.LENGTH_SHORT).show()
+                return true
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+        return false
+    }
+
+    private fun isStoragePermissionGranted(): Boolean {
+        return ContextCompat.checkSelfPermission(this@MainActivity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
     }
 }
