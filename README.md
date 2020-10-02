@@ -1,3 +1,5 @@
+<img alt="Make Pizza by Shailesh351" src="https://github.com/Shailesh351/android-pizza/raw/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png">
+
 # Make Pizza 🍕 
 Android Custom View for Drawing Pizza - Written in Kotlin. You can change colors, width, no of wedges. And also save as image
 
