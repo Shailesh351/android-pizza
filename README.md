@@ -18,7 +18,7 @@ Android Custom View for Drawing Pizza - Written in Kotlin. You can change colors
 
 Unless explicitly stated otherwise all files in this repository are licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0-standalone.html). All projects **must** properly attribute [The Original Source](https://github.com/Shailesh351/android-pizza). 
     
-    Make Pizze
+    Make Pizza
     Copyright (C) 2020 Shailesh Baldaniya
 
     This program is free software: you can redistribute it and/or modify
