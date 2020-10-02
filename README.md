@@ -5,9 +5,7 @@ Android Custom View for Drawing Pizza - Written in Kotlin. You can change colors
 
 ## Download
 
-<a href="https://play.google.com/store/apps/details?id=dev.shellbell.makepizza">
-  <img alt="Download on Google Play" src="https://play.google.com/intl/en_us/badges/images/badge_new.png" height=43>
-</a>
+[<img src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge-border.png" width="200" alt="Get Make Pizza on Google Play" />](https://play.google.com/store/apps/details?id=dev.shellbell.makepizza "Get Make Pizza on Google Play")
 
 ## Screenshots
 
