@@ -1,4 +1,4 @@
-# Make Pizza
+# Make Pizza 🍕 
 Android Custom View for Drawing Pizza - Written in Kotlin. You can change colors, width, no of wedges. And also save as image
 
 ## Download
