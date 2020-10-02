@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.ColorDrawable
-import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -20,7 +19,6 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -100,8 +98,8 @@ class MainActivity : AppCompatActivity() {
                     if (pizza.noOfWedges <= 100) {
                         pizza.invalidate()
                     } else {
-                        noOfWedgesEditText.setText("100")
-                        pizza.noOfWedges = 100
+                        noOfWedgesEditText.setText("")
+                        pizza.noOfWedges = 0
                         Toast.makeText(applicationContext, "Wedges can not be more than 100", Toast.LENGTH_SHORT).show()
                     }
                 } else {
