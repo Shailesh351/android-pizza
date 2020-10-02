@@ -20,9 +20,9 @@
         <item>@color/brown</item>
         <item>@color/grey</item>
         <item>@color/blue_grey</item>
-        <item>@color/colorPrimary</item>
-        <item>@color/colorAccent</item>
-        <item>@color/colorPrimaryDark</item>
+        <item>#3F51B5</item>
+        <item>#FF4081</item>
+        <item>#303F9F</item>
         <item>@color/pizza_cut</item>
         <item>@color/pizza_edge</item>
         <item>@color/pizza_color</item>
