@@ -4,6 +4,10 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MakePizza.iml" filepath="$PROJECT_DIR$/MakePizza.iml" />
       <module fileurl="file://$PROJECT_DIR$/pizza/Pizza.iml" filepath="$PROJECT_DIR$/pizza/Pizza.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/android-pizza.iml" filepath="$PROJECT_DIR$/.idea/modules/android-pizza.iml" group="android-pizza" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/android-pizza-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/android-pizza-app.iml" group="android-pizza/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/colorpicker/android-pizza-colorpicker.iml" filepath="$PROJECT_DIR$/.idea/modules/colorpicker/android-pizza-colorpicker.iml" group="android-pizza/colorpicker" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pizza/android-pizza-pizza.iml" filepath="$PROJECT_DIR$/.idea/modules/pizza/android-pizza-pizza.iml" group="android-pizza/pizza" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/colorpicker/colorpicker.iml" filepath="$PROJECT_DIR$/colorpicker/colorpicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/pizza/pizza.iml" filepath="$PROJECT_DIR$/pizza/pizza.iml" />

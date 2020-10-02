@@ -12,6 +12,8 @@ import android.os.Environment
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -29,87 +31,101 @@ import kotlin.math.min
 
 class MainActivity : AppCompatActivity() {
 
-	private lateinit var pizza: Pizza
+    private lateinit var pizza: Pizza
 
-	private lateinit var edgeWidthSeekBar: SeekBar
-	private lateinit var cutWidthSeekBar: SeekBar
-	private lateinit var noOfWedgesEditText: EditText
+    private lateinit var edgeWidthSeekBar: SeekBar
+    private lateinit var cutWidthSeekBar: SeekBar
+    private lateinit var noOfWedgesEditText: EditText
 
-	private lateinit var pizzaColorButton: ImageButton
-	private lateinit var edgeColorButton: ImageButton
-	private lateinit var cutColorButton: ImageButton
+    private lateinit var pizzaColorButton: ImageButton
+    private lateinit var edgeColorButton: ImageButton
+    private lateinit var cutColorButton: ImageButton
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_main)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-		edgeWidthSeekBar = findViewById(R.id.edge_width_seek_bar)
-		cutWidthSeekBar = findViewById(R.id.cut_width_seek_bar)
-		noOfWedgesEditText = findViewById(R.id.no_of_wedges_edit_text)
+        edgeWidthSeekBar = findViewById(R.id.edge_width_seek_bar)
+        cutWidthSeekBar = findViewById(R.id.cut_width_seek_bar)
+        noOfWedgesEditText = findViewById(R.id.no_of_wedges_edit_text)
 
-		pizzaColorButton = findViewById(R.id.pizza_color_picker)
-		edgeColorButton = findViewById(R.id.edge_color_picker)
-		cutColorButton = findViewById(R.id.cut_color_picker)
+        pizzaColorButton = findViewById(R.id.pizza_color_picker)
+        edgeColorButton = findViewById(R.id.edge_color_picker)
+        cutColorButton = findViewById(R.id.cut_color_picker)
 
-		pizza = findViewById(R.id.pizza)
-		pizza.isDrawingCacheEnabled = true
-		pizza.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
+        pizza = findViewById(R.id.pizza)
+        pizza.isDrawingCacheEnabled = true
+        pizza.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
 
-		pizza.post { setup() }
-	}
+        pizza.post { setup() }
+    }
 
-	private fun setup() {
-		setupNoOfWedgesEditText()
-		setupEdgeWidthSeekBar()
-		setupCutWidthSeekBar()
-		setupColorPickers()
-	}
+    private fun setup() {
+        setupNoOfWedgesEditText()
+        setupEdgeWidthSeekBar()
+        setupCutWidthSeekBar()
+        setupColorPickers()
+    }
 
-	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-		val saveMenuItem = menu?.add("Save pizza")
-		saveMenuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_save_white_24dp)
-		saveMenuItem?.setOnMenuItemClickListener { savePizza() }?.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-		return super.onCreateOptionsMenu(menu)
-	}
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val saveMenuItem = menu?.add("Save pizza")
+        saveMenuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_save_white_24dp)
+        saveMenuItem?.setOnMenuItemClickListener { savePizza() }?.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        return super.onCreateOptionsMenu(menu)
+    }
 
-	private fun setupNoOfWedgesEditText() {
-		noOfWedgesEditText.setText(pizza.noOfWedges.toString())
+    private fun setupNoOfWedgesEditText() {
+        noOfWedgesEditText.setText(pizza.noOfWedges.toString())
+        noOfWedgesEditText.addTextChangedListener(object : TextWatcher {
+			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int,
+										   after: Int) {
+			}
+
+			override fun afterTextChanged(text: Editable) {
+				if (text.toString().isNotEmpty()) {
+					try {
+						text.toString().toInt()
+						pizza.noOfWedges = text.toString().toInt()
+					} catch (e: Throwable) {
+						Toast.makeText(applicationContext, "Not an integer", Toast.LENGTH_SHORT).show()
+						noOfWedgesEditText.setText("0")
+						pizza.noOfWedges = 0
+					}
+                    if (pizza.noOfWedges <= 100){
+                        pizza.invalidate()
+                    } else {
+                        noOfWedgesEditText.setText("100")
+                        pizza.noOfWedges = 100
+                        Toast.makeText(applicationContext, "Wedges can not be more than 100", Toast.LENGTH_SHORT).show()
+                    }
+				} else {
+					pizza.noOfWedges = 0
+                    pizza.invalidate()
+				}
+			}
+		})
 		noOfWedgesEditText.setOnEditorActionListener(TextView.OnEditorActionListener { view, actionId, _ ->
 			if (actionId == EditorInfo.IME_ACTION_DONE) {
 				val inputManager = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 				inputManager.hideSoftInputFromWindow(
-					this.currentFocus?.windowToken,
-					InputMethodManager.HIDE_NOT_ALWAYS)
-
-				if (noOfWedgesEditText.text.toString().isNotEmpty()) {
-					try {
-						noOfWedgesEditText.text.toString().toInt()
-						pizza.noOfWedges = noOfWedgesEditText.text.toString().toInt()
-					} catch (e: Throwable) {
-						Toast.makeText(this, "Not an integer", Toast.LENGTH_SHORT).show()
-						noOfWedgesEditText.setText("0")
-						pizza.noOfWedges = 0
-					}
-				} else {
-					pizza.noOfWedges = 0
-				}
-
-				pizza.invalidate()
+						this.currentFocus?.windowToken,
+						InputMethodManager.HIDE_NOT_ALWAYS)
 
 				return@OnEditorActionListener true
 			}
 			false
 		})
-	}
+    }
 
-	private fun setupEdgeWidthSeekBar() {
-		val width = pizza.width - pizza.paddingLeft - pizza.paddingRight
-		val height = pizza.height - pizza.paddingTop - pizza.paddingBottom
+    private fun setupEdgeWidthSeekBar() {
+        val width = pizza.width - pizza.paddingLeft - pizza.paddingRight
+        val height = pizza.height - pizza.paddingTop - pizza.paddingBottom
 
-		edgeWidthSeekBar.max = min(width, height) / 2
-		edgeWidthSeekBar.progress = pizza.edgeWidth.toInt()
+        edgeWidthSeekBar.max = min(width, height) / 2
+        edgeWidthSeekBar.progress = pizza.edgeWidth.toInt()
 
-		edgeWidthSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        edgeWidthSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 			override fun onProgressChanged(seekBar: SeekBar?, progress: Int, p2: Boolean) {
 				pizza.edgeWidth = progress.toFloat()
 				pizza.invalidate()
@@ -119,15 +135,15 @@ class MainActivity : AppCompatActivity() {
 
 			override fun onStopTrackingTouch(seekBar: SeekBar?) {}
 		})
-	}
+    }
 
-	private fun setupCutWidthSeekBar() {
-		val MAX_CUT_WIDTH = 24F
+    private fun setupCutWidthSeekBar() {
+        val MAX_CUT_WIDTH = 24F
 
-		cutWidthSeekBar.max = MAX_CUT_WIDTH.toInt()
-		cutWidthSeekBar.progress = pizza.cutWidth.toInt()
+        cutWidthSeekBar.max = MAX_CUT_WIDTH.toInt()
+        cutWidthSeekBar.progress = pizza.cutWidth.toInt()
 
-		cutWidthSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        cutWidthSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 			override fun onProgressChanged(seekBar: SeekBar?, progress: Int, p2: Boolean) {
 				pizza.cutWidth = progress.toFloat()
 				pizza.invalidate()
@@ -137,24 +153,24 @@ class MainActivity : AppCompatActivity() {
 
 			override fun onStopTrackingTouch(seekBar: SeekBar?) {}
 		})
-	}
+    }
 
-	private fun setupColorPickers() {
-		pizzaColorButton.setOnClickListener { showColorPicker(pizza.color, "pizza") }
-		edgeColorButton.setOnClickListener { showColorPicker(pizza.edgeColor, "edge") }
-		cutColorButton.setOnClickListener { showColorPicker(pizza.cutColor, "cut") }
-	}
+    private fun setupColorPickers() {
+        pizzaColorButton.setOnClickListener { showColorPicker(pizza.color, "pizza") }
+        edgeColorButton.setOnClickListener { showColorPicker(pizza.edgeColor, "edge") }
+        cutColorButton.setOnClickListener { showColorPicker(pizza.cutColor, "cut") }
+    }
 
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-	private fun showColorPicker(selectedColor: Int, label: String) {
-		val colorPickerDialog = ColorPickerDialog()
-		val colors = this@MainActivity.resources.getIntArray(R.array.colors)
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private fun showColorPicker(selectedColor: Int, label: String) {
+        val colorPickerDialog = ColorPickerDialog()
+        val colors = this@MainActivity.resources.getIntArray(R.array.colors)
 
-		colorPickerDialog.initialize(R.string.color_picker_default_title,
-			colors, selectedColor, 5, 2)
+        colorPickerDialog.initialize(R.string.color_picker_default_title,
+				colors, selectedColor, 5, 2)
 
-		colorPickerDialog.setOnColorSelectedListener {
-			when (label) {
+        colorPickerDialog.setOnColorSelectedListener {
+            when (label) {
 				"pizza" -> {
 					pizza.color = it
 					pizzaColorButton.background = ColorDrawable(it)
@@ -167,52 +183,52 @@ class MainActivity : AppCompatActivity() {
 					pizza.cutColor = it
 					cutColorButton.background = ColorDrawable(it)
 				}
-			}
-			pizza.invalidate()
-		}
+            }
+            pizza.invalidate()
+        }
 
-		colorPickerDialog.show(this.fragmentManager, "color_picker")
-	}
+        colorPickerDialog.show(this.fragmentManager, "color_picker")
+    }
 
-	private fun savePizza(): Boolean {
-		pizza.buildDrawingCache()
-		val bitmap = pizza.drawingCache
+    private fun savePizza(): Boolean {
+        pizza.buildDrawingCache()
+        val bitmap = pizza.drawingCache
 
-		if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
+        if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
 
-			if (!isStoragePermissionGranted()) {
-				Toast.makeText(this@MainActivity, "Give storage permission to store Pizza", Toast.LENGTH_SHORT).show()
-				ActivityCompat.requestPermissions(this,
-					arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-					0)
-			}
+            if (!isStoragePermissionGranted()) {
+                Toast.makeText(this@MainActivity, "Give storage permission to store Pizza", Toast.LENGTH_SHORT).show()
+                ActivityCompat.requestPermissions(this,
+						arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+						0)
+            }
 
-			val dir = File(Environment.getExternalStoragePublicDirectory(
-				Environment.DIRECTORY_PICTURES), "Pizza")
+            val dir = File(Environment.getExternalStoragePublicDirectory(
+					Environment.DIRECTORY_PICTURES), "Pizza")
 
-			if (!dir.mkdirs()) {
-				//Directory not created
-			}
+            if (!dir.mkdirs()) {
+                //Directory not created
+            }
 
-			val sdf = SimpleDateFormat("yyyy-MM-dd-HH:mm:ss", Locale.getDefault())
-			val file = File(dir, "PIZZA-" + sdf.format(Calendar.getInstance().time) + ".png")
+            val sdf = SimpleDateFormat("yyyy-MM-dd-HH:mm:ss", Locale.getDefault())
+            val file = File(dir, "PIZZA-" + sdf.format(Calendar.getInstance().time) + ".png")
 
-			try {
-				val outputStream = FileOutputStream(file)
-				bitmap.compress(Bitmap.CompressFormat.PNG, 10, outputStream)
-				outputStream.close()
-				Toast.makeText(this@MainActivity, "Pizza saved at " + file.absolutePath, Toast.LENGTH_SHORT).show()
-				return true
-			} catch (e: Exception) {
-				e.printStackTrace()
-				Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_SHORT).show()
-			}
-		}
-		return false
-	}
+            try {
+                val outputStream = FileOutputStream(file)
+                bitmap.compress(Bitmap.CompressFormat.PNG, 10, outputStream)
+                outputStream.close()
+                Toast.makeText(this@MainActivity, "Pizza saved at " + file.absolutePath, Toast.LENGTH_SHORT).show()
+                return true
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+        return false
+    }
 
-	private fun isStoragePermissionGranted(): Boolean {
-		return ContextCompat.checkSelfPermission(this@MainActivity,
-			Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-	}
+    private fun isStoragePermissionGranted(): Boolean {
+        return ContextCompat.checkSelfPermission(this@MainActivity,
+				Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+    }
 }
