@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="me.shellbell.makepizza.MainActivity">
+    tools:context="dev.shellbell.makepizza.MainActivity">
 
     <me.shellbell.pizza.Pizza
         android:id="@+id/pizza"

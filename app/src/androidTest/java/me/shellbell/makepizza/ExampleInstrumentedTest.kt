@@ -1,4 +1,4 @@
-package me.shellbell.makepizza
+package dev.shellbell.makepizza
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("me.shellbell.makepizza", appContext.packageName)
+        assertEquals("dev.shellbell.makepizza", appContext.packageName)
     }
 }

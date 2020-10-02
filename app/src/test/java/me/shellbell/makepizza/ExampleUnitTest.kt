@@ -1,4 +1,4 @@
-package me.shellbell.makepizza
+package dev.shellbell.makepizza
 
 import org.junit.Test
 
